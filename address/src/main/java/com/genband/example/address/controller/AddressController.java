@@ -24,16 +24,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.genband.example.address.model.Address;
-import com.genband.example.address.repository.AddressRepository;
+import com.genband.example.address.service.AddressService;
 
 @RestController
 @RequestMapping("/address")
 public class AddressController {
+    private final static String CONTACT_SERVICE = "http://localhost:8080/contact";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private AddressRepository addressRepository;
+    private AddressService addressService;
 
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
@@ -42,6 +43,7 @@ public class AddressController {
      * Example HELLO
      * 
      * URL: localhost:8090/address/hello
+     * 
      * @return
      */
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -52,11 +54,11 @@ public class AddressController {
     /**
      * Example one:
      * 
-     * Request: client => address => contact
-     * Response: client <= address <= contact
+     * Request: client => address => contact Response: client <= address <=
+     * contact
      * 
-     * URL: localhost:8090/address/example?name=
-     * Goal: Make sure User is in both address and contact database.
+     * URL: localhost:8090/address/example?name= Goal: Make sure User is in both
+     * address and contact database.
      * 
      * @param name
      * @return if found, return HTTPStatus.OK. Otherwise, return
@@ -65,13 +67,13 @@ public class AddressController {
     @RequestMapping(value = "/example1", method = RequestMethod.GET)
     public ResponseEntity<?> example1(@RequestParam(value = "name") String contactName) {
         // check the contactName is in the address list
-        List<Address> result = addressRepository.findByContactName(contactName);
+        List<Address> result = addressService.findByContactName(contactName);
         if (result != null && result.size() > 0) {
             // check the contactName is still available in the contact list
             RestTemplate restTemplate = restTemplateBuilder.build();
 
-            ResponseEntity<Void> response = restTemplate.getForEntity("http://localhost:8080/contact/{name}",
-                    Void.class, contactName);
+            ResponseEntity<Void> response = restTemplate.getForEntity(CONTACT_SERVICE + "/{name}", Void.class,
+                    contactName);
             logger.info("AddressController => example1 => HTTP Response :" + response.getStatusCode());
             if (response.getStatusCode() == HttpStatus.OK) {
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -84,12 +86,13 @@ public class AddressController {
 
     /**
      * use jsonNode to represent result
+     * 
      * @return
      */
     @RequestMapping(value = "/test1", method = RequestMethod.GET)
     public JsonNode test1() {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        JsonNode jsonNode = restTemplate.getForObject("http://localhost:8080/contact/all", JsonNode.class);
+        JsonNode jsonNode = restTemplate.getForObject(CONTACT_SERVICE + "/all", JsonNode.class);
 
         for (int index = 0; jsonNode.get(index) != null; index++) {
             logger.info(jsonNode.get(index).get("id").toString() + " " + jsonNode.get(index).get("name").toString());
@@ -100,34 +103,35 @@ public class AddressController {
 
     /**
      * Get Headers
+     * 
      * @return
      */
     @RequestMapping(value = "/test2", method = RequestMethod.GET)
     public String test2() {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
-        HttpHeaders headForHeaders = restTemplate.headForHeaders("http://localhost:8080/contact/all");
+        HttpHeaders headForHeaders = restTemplate.headForHeaders(CONTACT_SERVICE + "/all");
 
         return headForHeaders.toString();
     }
 
     /**
-    *  Get OPTIONS
-    *
-    * @return
-    */
+     * Get OPTIONS
+     *
+     * @return
+     */
     @RequestMapping(value = "/test3", method = RequestMethod.GET)
     public Set<?> test3() {
-        Set<HttpMethod> optionsForAllow = restTemplateBuilder.build().optionsForAllow("http://localhost:8080/contact");
+        Set<HttpMethod> optionsForAllow = restTemplateBuilder.build().optionsForAllow(CONTACT_SERVICE);
 
         return optionsForAllow;
     }
 
     /**
-    * test ArrayNode and restTemplate.exchange
-    *
-    * @return
-    */
+     * test ArrayNode and restTemplate.exchange
+     *
+     * @return
+     */
     @RequestMapping(value = "/test4", method = RequestMethod.GET)
     public ResponseEntity<?> test4() {
         RestTemplate restTemplate = restTemplateBuilder.build();
@@ -150,8 +154,8 @@ public class AddressController {
 
         HttpEntity<ArrayNode> entity = new HttpEntity<>(arrayNode, headers);
 
-        ResponseEntity<?> exchange = restTemplate.exchange("http://localhost:8080/contact/add-list", HttpMethod.POST,
-                entity, ResponseEntity.class);
+        ResponseEntity<?> exchange = restTemplate.exchange(CONTACT_SERVICE + "/add-list", HttpMethod.POST, entity,
+                ResponseEntity.class);
 
         logger.info(exchange.toString());
 
@@ -159,9 +163,8 @@ public class AddressController {
     }
 
     /**
-     * test single object node.
-     * if requestBody is list, we use ArrayNode
-     * if requestBody is single object, we use ObjectNode
+     * test single object node. if requestBody is list, we use ArrayNode if
+     * requestBody is single object, we use ObjectNode
      */
     @RequestMapping(value = "/test5", method = RequestMethod.GET)
     public ResponseEntity<?> test5() {
@@ -177,8 +180,8 @@ public class AddressController {
 
         HttpEntity<ObjectNode> entity = new HttpEntity<>(objectNode1, headers);
 
-        ResponseEntity<?> response = restTemplate.exchange("http://localhost:8080/contact/update", HttpMethod.PUT,
-                entity, ResponseEntity.class);
+        ResponseEntity<?> response = restTemplate.exchange(CONTACT_SERVICE + "/update", HttpMethod.PUT, entity,
+                ResponseEntity.class);
 
         logger.info(response.toString());
 
@@ -190,7 +193,7 @@ public class AddressController {
      */
     @RequestMapping(value = "/test6", method = RequestMethod.GET)
     public List<Address> test6() {
-        return addressRepository.findByAddressNameEndsWith("a");
+        return addressService.findByAddressNameEndsWith("a");
     }
 
 }

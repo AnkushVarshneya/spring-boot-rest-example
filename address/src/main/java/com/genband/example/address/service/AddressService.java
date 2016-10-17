@@ -23,4 +23,8 @@ public class AddressService extends AbstractService<Address, Integer> {
     public List<Address> findByContactName(String contactName) {
         return repository.findByContactName(contactName);
     }
+
+    public List<Address> findByAddressNameEndsWith(String string) {
+        return repository.findByAddressNameEndsWith(string);
+    }
 }

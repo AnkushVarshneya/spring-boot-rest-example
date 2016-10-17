@@ -40,3 +40,4 @@ public class AddressRepostoryTest {
         assertThat(findByContactName.get(0).getAddressName()).isEqualTo("genband");
     }
 }
+    
