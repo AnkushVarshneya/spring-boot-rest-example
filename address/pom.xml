@@ -24,7 +24,7 @@
 		<springfox.swagger2.version>2.4.0</springfox.swagger2.version>
 		<springfox.swagger.ui>2.4.0</springfox.swagger.ui>
 		<maven.checkstyle.plugin.version>2.16</maven.checkstyle.plugin.version>
-		<checkstyle.config.location>src/main/sources/checkstyle/google_checks.xml</checkstyle.config.location>
+		<checkstyle.config.location>src/main/sources/checkstyle/google-checks.xml</checkstyle.config.location>
 	</properties>
 
 
