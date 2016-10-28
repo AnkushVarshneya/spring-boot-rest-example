@@ -19,22 +19,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    // @Bean
-    // public Docket api() {
-    // return new Docket(DocumentationType.SWAGGER_2)
-    // .select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
-    // }
+  // @Bean
+  // public Docket api() {
+  // return new Docket(DocumentationType.SWAGGER_2)
+  // .select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
+  // }
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select().apis(RequestHandlerSelectors.basePackage("com.genband.example.address.controller"))
-                .paths(PathSelectors.any()).build().apiInfo(apiInfo());
-    }
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2).select()
+        .apis(RequestHandlerSelectors.basePackage("com.genband.example.address.controller"))
+        .paths(PathSelectors.any()).build().apiInfo(apiInfo());
+  }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "My Rest API", "demo", "0.0.1-SNAPSHOT", "Terms of service",
-                new Contact("genband", "www.genband.com", "@genband.com"), "License of API", "API license URL");
-    }
+  private ApiInfo apiInfo() {
+    return new ApiInfo("My Rest API", "demo", "0.0.1-SNAPSHOT", "Terms of service",
+        new Contact("genband", "www.genband.com", "@genband.com"), "License of API",
+        "API license URL");
+  }
 }

@@ -23,6 +23,8 @@
 		<java.version>1.8</java.version>
 		<springfox.swagger2.version>2.4.0</springfox.swagger2.version>
 		<springfox.swagger.ui>2.4.0</springfox.swagger.ui>
+		<maven.checkstyle.plugin.version>2.16</maven.checkstyle.plugin.version>
+		<checkstyle.config.location>src/main/sources/checkstyle/google_checks.xml</checkstyle.config.location>
 	</properties>
 
 
@@ -50,7 +52,7 @@
 			<!-- <scope>runtime</scope> -->
 			<scope>compile</scope>
 		</dependency>
-		<dependency>	
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${springfox.swagger2.version}</version>
@@ -68,6 +70,30 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.plugin.version}</version>
+				<configuration>
+					<!-- false by default -->
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven.checkstyle.plugin.version}</version>
+				<configuration>
+					<!-- false by default -->
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
 </project>

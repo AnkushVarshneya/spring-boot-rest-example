@@ -11,20 +11,20 @@ import com.genband.example.address.repository.AddressRepository;
 @Service
 public class AddressService extends AbstractService<Address, Integer> {
 
-    private AddressRepository repository;
+  private AddressRepository repository;
 
-    @Autowired
-    public AddressService(AddressRepository repository) {
-        super(repository);
+  @Autowired
+  public AddressService(AddressRepository repository) {
+    super(repository);
 
-        this.repository = repository;
-    }
+    this.repository = repository;
+  }
 
-    public List<Address> findByContactName(String contactName) {
-        return repository.findByContactName(contactName);
-    }
+  public List<Address> findByContactName(String contactName) {
+    return repository.findByContactName(contactName);
+  }
 
-    public List<Address> findByAddressNameEndsWith(String string) {
-        return repository.findByAddressNameEndsWith(string);
-    }
+  public List<Address> findByAddressNameEndsWith(String string) {
+    return repository.findByAddressNameEndsWith(string);
+  }
 }
